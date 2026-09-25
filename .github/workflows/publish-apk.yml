@@ -1,0 +1,54 @@
+name: Publish public APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+    paths:
+      - ".github/workflows/publish-apk.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      ARTIFACT_URL: 'https://sdmntpritalynorth.oaiusercontent.com/files/00000000-96f0-8246-9add-09ac2f2212c9/raw?se=2026-09-25T05%3A57%3A00Z&sp=r&sv=2026-02-06&sr=b&scid=1bf96ce8-a806-50b9-9349-a1e8da4b97a8&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T05%3A31%3A06Z&ske=2026-09-26T05%3A31%3A06Z&sks=b&skv=2026-02-06&sig=ubKJyobLI4vY2cFP5%2BpK%2BuKrGpSbCmvjef8Sg8gl9Ko%3D'
+      RELEASE_TAG: v68-native-archive
+      APK_NAME: TenImper-Reader-v68-NATIVE-ARCHIVE-GITHUB.apk
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download private build artifact handoff
+        shell: bash
+        run: |
+          curl -fL --retry 3 "$ARTIFACT_URL" -o artifact.zip
+          mkdir -p dist
+          unzip -j artifact.zip '*.apk' -d dist
+          APK="$(find dist -maxdepth 1 -type f -name '*.apk' | head -n 1)"
+          test -n "$APK"
+          mv "$APK" "dist/$APK_NAME"
+          sha256sum "dist/$APK_NAME"
+
+      - name: Publish v68 release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: TenImper Reader v68 — Native Archive
+          body: |
+            Публичный APK-релиз приложения «Тень Императора».
+
+            v68:
+            - нативный личный архив;
+            - локальная история чтения;
+            - локальная закладка;
+            - серверный прогресс и закладки;
+            - быстрый доступ к Следам Хроник.
+
+            Исходный код и ключи подписи в этом публичном репозитории не публикуются.
+          files: dist/${{ env.APK_NAME }}
+          prerelease: false
+          make_latest: true

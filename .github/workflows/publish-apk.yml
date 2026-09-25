@@ -14,9 +14,9 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     env:
-      ARTIFACT_URL: 'https://sdmntprukwest.oaiusercontent.com/files/00000000-4450-8243-8751-8d9a7a0831a1/raw?se=2026-09-25T07%3A44%3A15Z&sp=r&sv=2026-02-06&sr=b&scid=687fa2f1-a6bd-5aab-94ac-0d941b9ce90c&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T06%3A57%3A55Z&ske=2026-09-26T06%3A57%3A55Z&sks=b&skv=2026-02-06&sig=Mxev9RllkxbWkfhq26CKg4OUG9L/GzqxtVnBJt8tycU%3D'
-      RELEASE_TAG: v72-offline-library
-      APK_NAME: TenImper-Reader-v72-OFFLINE-LIBRARY-GITHUB.apk
+      ARTIFACT_URL: 'https://sdmntpritalynorth.oaiusercontent.com/files/00000000-15c4-8246-9e87-17c9c489f9d9/raw?se=2026-09-25T09%3A35%3A09Z&sp=r&sv=2026-02-06&sr=b&scid=940e281d-e582-5016-bf9d-12114a06b7c4&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T07%3A42%3A06Z&ske=2026-09-26T07%3A42%3A06Z&sks=b&skv=2026-02-06&sig=1iumrrnNND9PBYzPrin5gNhcQ4e8MvAxH1JTVc%2BMEFE%3D'
+      RELEASE_TAG: v73-native-support
+      APK_NAME: TenImper-Reader-v73-NATIVE-SUPPORT-GITHUB.apk
 
     steps:
       - name: Checkout
@@ -35,11 +35,11 @@ jobs:
           fi
           sha256sum "dist/$APK_NAME"
 
-      - name: Publish v72 release
+      - name: Publish v73 release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
-          name: TenImper Reader v72 — Offline Library
+          name: TenImper Reader v73 — Native Support
           body: |
             Публичный APK-релиз приложения «Тень Императора».
 

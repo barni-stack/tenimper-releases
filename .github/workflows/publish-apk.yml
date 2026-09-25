@@ -14,9 +14,9 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     env:
-      ARTIFACT_URL: 'https://sdmntprnortheu.oaiusercontent.com/files/00000000-7a64-81f4-8d28-755363f9619a/raw?se=2026-09-25T13%3A24%3A36Z&sp=r&sv=2026-02-06&sr=b&scid=2576b6f6-33db-553c-9dba-ce4f1503ad84&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T11%3A43%3A05Z&ske=2026-09-26T11%3A43%3A05Z&sks=b&skv=2026-02-06&sig=Tg7OfB0Tr/ZH3rba8s0JUwUh2%2BPByHDV%2B6vIFtKuBlY%3D'
-      RELEASE_TAG: v73-native-support
-      APK_NAME: TenImper-Reader-v73-NATIVE-SUPPORT-GITHUB.apk
+      ARTIFACT_URL: 'https://sdmntpritalynorth.oaiusercontent.com/files/00000000-5678-8246-a148-58025550fb76/raw?se=2026-09-25T13%3A31%3A21Z&sp=r&sv=2026-02-06&sr=b&scid=55a11a04-f1d9-5c0e-aa62-ba882b9a4518&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T09%3A45%3A18Z&ske=2026-09-26T09%3A45%3A18Z&sks=b&skv=2026-02-06&sig=3n3FW2BcGeRMBLBDqwI96ftLAglqKTT0PFFHMDSWoYk%3D'
+      RELEASE_TAG: v74-native-vestnik
+      APK_NAME: TenImper-Reader-v74-NATIVE-VESTNIK-GITHUB.apk
 
     steps:
       - name: Checkout
@@ -35,20 +35,21 @@ jobs:
           fi
           sha256sum "dist/$APK_NAME"
 
-      - name: Publish v73 release
+      - name: Publish v74 release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
-          name: TenImper Reader v73 — Native Support
+          name: TenImper Reader v74 — Native Vestnik Routing
           body: |
             Публичный APK-релиз приложения «Тень Императора».
 
-            v73:
-            - нативный экран поддержки в Покоях;
-            - создание новых обращений;
-            - список своих тикетов;
-            - чтение переписки и ответы;
-            - безопасный переход на веб-поддержку, если серверный адаптер ещё не установлен.
+            v74:
+            - Вестник открывает ответы в нативных комментариях;
+            - новые главы открываются сразу в Reader;
+            - титулы и рамки ведут в нативный профиль;
+            - воспоминания ведут в личный архив;
+            - новости автора из Павильона открываются нативно;
+            - WebView остаётся только запасным маршрутом для неизвестных ссылок.
 
             Исходный код и ключи подписи в этом публичном репозитории не публикуются.
           files: dist/${{ env.APK_NAME }}

@@ -14,9 +14,9 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     env:
-      ARTIFACT_URL: 'https://sdmntpritalynorth.oaiusercontent.com/files/00000000-1f04-8246-93e3-3b39493a56da/raw?se=2026-09-25T06%3A19%3A57Z&sp=r&sv=2026-02-06&sr=b&scid=22dd2e8f-4134-5e9d-8c62-97cdac388643&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T05%3A44%3A46Z&ske=2026-09-26T05%3A44%3A46Z&sks=b&skv=2026-02-06&sig=zn5XZ0cDeslFr5XL/pbDMY50Rsdss5jq9GkQRv3dfj0%3D'
-      RELEASE_TAG: v69-update-checker
-      APK_NAME: TenImper-Reader-v69-UPDATE-CHECKER-GITHUB.apk
+      ARTIFACT_URL: 'https://sdmntpritalynorth.oaiusercontent.com/files/00000000-5798-8246-9ffb-254f87d6817b/raw?se=2026-09-25T06%3A27%3A39Z&sp=r&sv=2026-02-06&sr=b&scid=1aff38ea-4fe7-5d8f-a731-0e3d26dd268b&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-25T05%3A44%3A46Z&ske=2026-09-26T05%3A44%3A46Z&sks=b&skv=2026-02-06&sig=Lrl3PR5sONp5XiuzeqpJY9vP/Xyd7zp0sefuTVNgUM0%3D'
+      RELEASE_TAG: v70-native-pavilion
+      APK_NAME: TenImper-Reader-v70-NATIVE-PAVILION-GITHUB.apk
 
     steps:
       - name: Checkout
@@ -35,19 +35,19 @@ jobs:
           fi
           sha256sum "dist/$APK_NAME"
 
-      - name: Publish v69 release
+      - name: Publish v70 release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
-          name: TenImper Reader v69 — Update Checker
+          name: TenImper Reader v70 — Native Pavilion
           body: |
             Публичный APK-релиз приложения «Тень Императора».
 
-            v69:
-            - встроенная проверка обновлений;
-            - текущая версия показывается в настройках;
-            - проверка публичного tenimper-releases;
-            - кнопка скачивания нового APK прямо из публичного релиза.
+            v70:
+            - вести Павильона читаются нативно внутри приложения;
+            - полный текст новости берётся из api/v1/pavilion.php;
+            - добавлен аватар автора в Павильоне;
+            - больше не нужен переход на веб-страницу для чтения вести.
 
             Исходный код и ключи подписи в этом публичном репозитории не публикуются.
           files: dist/${{ env.APK_NAME }}

@@ -30,7 +30,9 @@ jobs:
           unzip -j artifact.zip '*.apk' -d dist
           APK="$(find dist -maxdepth 1 -type f -name '*.apk' | head -n 1)"
           test -n "$APK"
-          mv "$APK" "dist/$APK_NAME"
+          if [ "$APK" != "dist/$APK_NAME" ]; then
+            mv "$APK" "dist/$APK_NAME"
+          fi
           sha256sum "dist/$APK_NAME"
 
       - name: Publish v68 release

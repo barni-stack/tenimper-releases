@@ -1,8 +1,6 @@
 name: Publish public Android APK
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
     inputs:
       bundle_url:
@@ -22,8 +20,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     env:
-      BUNDLE_URL: https://sdmntpritalynorth.oaiusercontent.com/files/00000000-ec18-8246-9bd9-2a5efa926c56/raw?se=2026-09-28T14%3A08%3A03Z&sp=r&sv=2026-02-06&sr=b&scid=b95c6482-04f0-9847-9c09-2f9909eba890&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-28T05%3A48%3A33Z&ske=2026-09-29T05%3A48%3A33Z&sks=b&skv=2026-02-06&sig=vUvckl4kg6t8FKlt7xMNqYxR0jSrxrUZdTkFqnFZYpM%3D
-      RELEASE_TAG: v84-chapter-covers
+      BUNDLE_URL: ${{ inputs.bundle_url }}
+      RELEASE_TAG: ${{ inputs.release_tag }}
 
     steps:
       - name: Checkout
@@ -35,7 +33,7 @@ jobs:
           curl -fL --retry 3 "$BUNDLE_URL" -o bundle.zip
           mkdir -p dist
           unzip -j bundle.zip -d dist
-          test -f "dist/TenImper-Reader-v84-CHAPTER-COVERS.apk"
+          test -f "dist/${{ inputs.apk_filename }}"
           sha256sum dist/*
 
       - name: Publish v84 release
@@ -47,6 +45,6 @@ jobs:
             Версия v84: для глав используются загруженные на сайт обложки; фон читалки стал спокойнее.
             Сайт не меняется; API, главы и комментарии используют существующую интеграцию.
           files: |
-            dist/TenImper-Reader-v84-CHAPTER-COVERS.apk
+            dist/${{ inputs.apk_filename }}
           prerelease: true
           make_latest: true

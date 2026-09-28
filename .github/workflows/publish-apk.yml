@@ -1,4 +1,4 @@
-name: Publish public APK
+name: Publish public app and site patch
 
 on:
   workflow_dispatch:
@@ -14,43 +14,44 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     env:
-      ARTIFACT_URL: 'https://sdmntpritalynorth.oaiusercontent.com/files/00000000-ebac-8246-af49-62e1780f1d1f/raw?se=2026-09-26T11%3A13%3A55Z&sp=r&sv=2026-02-06&sr=b&scid=2a98c3c5-b7fd-5576-9942-b7e100e57e99&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-26T07%3A10%3A06Z&ske=2026-09-27T07%3A10%3A06Z&sks=b&skv=2026-02-06&sig=U6WV6VPk0B9I5mdTFsRZHqZpvHU4GwOmt1OPkuyb4ME%3D'
-      RELEASE_TAG: v75-comments-bridge
-      APK_NAME: TenImper-Reader-v75-COMMENTS-BRIDGE-GITHUB.apk
+      BUNDLE_URL: 'https://sdmntpritalynorth.oaiusercontent.com/files/00000000-0cac-8246-b0e3-9a9408005de6/raw?se=2026-09-28T07%3A42%3A07Z&sp=r&sv=2026-02-06&sr=b&scid=e1f46e6d-c5fb-551b-95c7-023a5c438db9&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-28T06%3A32%3A56Z&ske=2026-09-29T06%3A32%3A56Z&sks=b&skv=2026-02-06&sig=b/wpbWvuECRmMIBPdqkkXYUnyhpt8KhbZVCyt%2BnRlzY%3D'
+      RELEASE_TAG: v78-comments-integration
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download private build artifact handoff
+      - name: Download private release bundle
         shell: bash
         run: |
-          curl -fL --retry 3 "$ARTIFACT_URL" -o artifact.zip
+          curl -fL --retry 3 "$BUNDLE_URL" -o bundle.zip
           mkdir -p dist
-          unzip -j artifact.zip '*.apk' -d dist
-          APK="$(find dist -maxdepth 1 -type f -name '*.apk' | head -n 1)"
-          test -n "$APK"
-          if [ "$APK" != "dist/$APK_NAME" ]; then
-            mv "$APK" "dist/$APK_NAME"
-          fi
-          sha256sum "dist/$APK_NAME"
+          unzip -j bundle.zip -d dist
+          test -f dist/TenImper-Reader-v78-COMMENTS-INTEGRATION-GITHUB.apk
+          test -f dist/TenImper-SITE-PATCH-v78.zip
+          sha256sum dist/*
 
-      - name: Publish v75 release
+      - name: Publish v78 release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
-          name: TenImper Reader v75 — Comments Bridge
+          name: TenImper Reader v78 — Comments Integration
           body: |
-            Публичный APK-релиз приложения «Тень Императора».
+            Публичная парная версия: APK + SITE PATCH.
 
-            v75:
-            - комментарии в Reader работают через bearer JSON API;
-            - убран автоматический откат записи комментариев на cookie/CSRF;
-            - кэш комментариев разделён по пользователям;
-            - добавлена нативная жалоба на комментарий;
-            - для полноценной работы нужен SITE PATCH v75 с /api/v1/comments.php.
+            SITE PATCH v78:
+            - добавляет api/v1/comments.php для bearer-комментариев приложения;
+            - включает api/v1/support.php;
+            - включает api/v1/memories.php;
+            - использует те же chapter_comments и comment_reactions, что и сайт.
 
-            Исходный код и ключи подписи в этом публичном репозитории не публикуются.
-          files: dist/${{ env.APK_NAME }}
+            Порядок:
+            1. Сделать резервную копию сайта.
+            2. Распаковать TenImper-SITE-PATCH-v78.zip в корень сайта.
+            3. Установить APK v78.
+            4. Проверить чтение/создание/ответ/реакцию/редактирование/удаление комментария.
+          files: |
+            dist/TenImper-Reader-v78-COMMENTS-INTEGRATION-GITHUB.apk
+            dist/TenImper-SITE-PATCH-v78.zip
           prerelease: false
           make_latest: true

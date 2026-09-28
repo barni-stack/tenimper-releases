@@ -1,6 +1,8 @@
 name: Publish public Android APK
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
     inputs:
       bundle_url:
@@ -20,8 +22,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     env:
-      BUNDLE_URL: ${{ inputs.bundle_url }}
-      RELEASE_TAG: ${{ inputs.release_tag }}
+      BUNDLE_URL: https://sdmntpritalynorth.oaiusercontent.com/files/00000000-8508-8246-b64e-713467ad311b/raw?se=2026-09-28T13%3A52%3A29Z&sp=r&sv=2026-02-06&sr=b&scid=f8e76e24-772b-43e7-876d-9c5cdebe85b0&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-28T06%3A10%3A01Z&ske=2026-09-29T06%3A10%3A01Z&sks=b&skv=2026-02-06&sig=MMCEo%2Bb158wX6oPp7yV5JVxtuteyVvCjqSEuCm98F%2B0%3D
+      RELEASE_TAG: v83-readability-fix
 
     steps:
       - name: Checkout
@@ -33,7 +35,7 @@ jobs:
           curl -fL --retry 3 "$BUNDLE_URL" -o bundle.zip
           mkdir -p dist
           unzip -j bundle.zip -d dist
-          test -f "dist/${{ inputs.apk_filename }}"
+          test -f "dist/TenImper-Reader-v83-READABILITY-FIX.apk"
           sha256sum dist/*
 
       - name: Publish v83 release
@@ -45,6 +47,6 @@ jobs:
             Версия v83: исправлены обрезание текста разделов, вид карточек Хроник, читаемость текста и край постера.
             Сайт не меняется; API, главы и комментарии используют существующую интеграцию.
           files: |
-            dist/${{ inputs.apk_filename }}
+            dist/TenImper-Reader-v83-READABILITY-FIX.apk
           prerelease: true
           make_latest: true

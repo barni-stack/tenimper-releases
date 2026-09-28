@@ -1,4 +1,4 @@
-name: Publish public app and site patch
+name: Publish public Android APK
 
 on:
   workflow_dispatch:
@@ -14,44 +14,31 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     env:
-      BUNDLE_URL: 'https://sdmntpritalynorth.oaiusercontent.com/files/00000000-0cac-8246-b0e3-9a9408005de6/raw?se=2026-09-28T07%3A42%3A07Z&sp=r&sv=2026-02-06&sr=b&scid=e1f46e6d-c5fb-551b-95c7-023a5c438db9&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-28T06%3A32%3A56Z&ske=2026-09-29T06%3A32%3A56Z&sks=b&skv=2026-02-06&sig=b/wpbWvuECRmMIBPdqkkXYUnyhpt8KhbZVCyt%2BnRlzY%3D'
-      RELEASE_TAG: v78-comments-integration
+      BUNDLE_URL: 'https://sdmntprdenmarkeast.oaiusercontent.com/files/00000000-9694-8210-84bb-c133369ea252/raw?se=2026-09-28T13%3A44%3A13Z&sp=r&sv=2026-02-06&sr=b&scid=119642a5-7599-4251-a50a-f96c834bcac4&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-28T04%3A09%3A37Z&ske=2026-09-29T04%3A09%3A37Z&sks=b&skv=2026-02-06&sig=vgcaKZeOdLAxYIDHYBt0W0AnwVexATkDpECLVjkPOuI%3D'
+      RELEASE_TAG: v82-illustrated-reader
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download private release bundle
+      - name: Download v82 APK bundle
         shell: bash
         run: |
           curl -fL --retry 3 "$BUNDLE_URL" -o bundle.zip
           mkdir -p dist
           unzip -j bundle.zip -d dist
-          test -f dist/TenImper-Reader-v78-COMMENTS-INTEGRATION-GITHUB.apk
-          test -f dist/TenImper-SITE-PATCH-v78.zip
+          test -f dist/TenImper-Reader-v82-ILLUSTRATED-READER.apk
           sha256sum dist/*
 
-      - name: Publish v78 release
+      - name: Publish v82 release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
-          name: TenImper Reader v78 — Comments Integration
+          name: TenImper Reader v82 — Illustrated Reader
           body: |
-            Публичная парная версия: APK + SITE PATCH.
-
-            SITE PATCH v78:
-            - добавляет api/v1/comments.php для bearer-комментариев приложения;
-            - включает api/v1/support.php;
-            - включает api/v1/memories.php;
-            - использует те же chapter_comments и comment_reactions, что и сайт.
-
-            Порядок:
-            1. Сделать резервную копию сайта.
-            2. Распаковать TenImper-SITE-PATCH-v78.zip в корень сайта.
-            3. Установить APK v78.
-            4. Проверить чтение/создание/ответ/реакцию/редактирование/удаление комментария.
+            Версия v82: иллюстрированная главная с Тан Юем и Ли Анем, пергаментная читалка и компактный ряд Хроник.
+            Сайт не меняется; API, главы и комментарии используют существующую интеграцию.
           files: |
-            dist/TenImper-Reader-v78-COMMENTS-INTEGRATION-GITHUB.apk
-            dist/TenImper-SITE-PATCH-v78.zip
-          prerelease: false
+            dist/TenImper-Reader-v82-ILLUSTRATED-READER.apk
+          prerelease: true
           make_latest: true

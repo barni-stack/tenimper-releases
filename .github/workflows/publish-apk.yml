@@ -1,6 +1,8 @@
 name: Publish public Android APK
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
     inputs:
       bundle_url:
@@ -20,29 +22,29 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     env:
-      BUNDLE_URL: ${{ inputs.bundle_url }}
-      RELEASE_TAG: ${{ inputs.release_tag }}
+      BUNDLE_URL: https://sdmntpritalynorth.oaiusercontent.com/files/00000000-005c-8246-8491-15d3c501ed60/raw?se=2026-09-28T13%3A51%3A29Z&sp=r&sv=2026-02-06&sr=b&scid=f8e76e24-772b-43e7-876d-9c5cdebe85b0&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-28T05%3A13%3A44Z&ske=2026-09-29T05%3A13%3A44Z&sks=b&skv=2026-02-06&sig=B/OQM7zKqDcHCo%2BGcvxvWx3DUV68cwyUu445cfDYfEU%3D
+      RELEASE_TAG: v83-readability-fix
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Download v82 APK bundle
+      - name: Download v83 APK bundle
         shell: bash
         run: |
           curl -fL --retry 3 "$BUNDLE_URL" -o bundle.zip
           mkdir -p dist
           unzip -j bundle.zip -d dist
-          test -f "dist/${{ inputs.apk_filename }}"
+          test -f "dist/TenImper-Reader-v83-READABILITY-FIX.apk"
           sha256sum dist/*
 
-      - name: Publish v82 release
+      - name: Publish v83 release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
-          name: TenImper Reader v82 — Illustrated Reader
+          name: TenImper Reader v83 — Readability Fix
           body: |
-            Версия v82: иллюстрированная главная с Тан Юем и Ли Анем, пергаментная читалка и компактный ряд Хроник.
+            Версия v83: исправлены обрезание текста разделов, вид карточек Хроник, читаемость текста и край постера.
             Сайт не меняется; API, главы и комментарии используют существующую интеграцию.
           files: |
             dist/${{ inputs.apk_filename }}

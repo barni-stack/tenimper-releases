@@ -2,10 +2,16 @@ name: Publish public Android APK
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ "main" ]
-    paths:
-      - ".github/workflows/publish-apk.yml"
+    inputs:
+      bundle_url:
+        description: "Temporary URL for a ZIP containing the APK"
+        required: true
+      release_tag:
+        description: "Release tag"
+        required: true
+      apk_filename:
+        description: "APK filename inside the ZIP"
+        required: true
 
 permissions:
   contents: write
@@ -14,8 +20,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     env:
-      BUNDLE_URL: 'https://sdmntprdenmarkeast.oaiusercontent.com/files/00000000-9694-8210-84bb-c133369ea252/raw?se=2026-09-28T13%3A44%3A13Z&sp=r&sv=2026-02-06&sr=b&scid=119642a5-7599-4251-a50a-f96c834bcac4&skoid=82a3371f-2f6c-4f81-8a78-2701b362559b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-28T04%3A09%3A37Z&ske=2026-09-29T04%3A09%3A37Z&sks=b&skv=2026-02-06&sig=vgcaKZeOdLAxYIDHYBt0W0AnwVexATkDpECLVjkPOuI%3D'
-      RELEASE_TAG: v82-illustrated-reader
+      BUNDLE_URL: ${{ inputs.bundle_url }}
+      RELEASE_TAG: ${{ inputs.release_tag }}
 
     steps:
       - name: Checkout
@@ -27,7 +33,7 @@ jobs:
           curl -fL --retry 3 "$BUNDLE_URL" -o bundle.zip
           mkdir -p dist
           unzip -j bundle.zip -d dist
-          test -f dist/TenImper-Reader-v82-ILLUSTRATED-READER.apk
+          test -f "dist/${{ inputs.apk_filename }}"
           sha256sum dist/*
 
       - name: Publish v82 release
@@ -39,6 +45,6 @@ jobs:
             Версия v82: иллюстрированная главная с Тан Юем и Ли Анем, пергаментная читалка и компактный ряд Хроник.
             Сайт не меняется; API, главы и комментарии используют существующую интеграцию.
           files: |
-            dist/TenImper-Reader-v82-ILLUSTRATED-READER.apk
+            dist/${{ inputs.apk_filename }}
           prerelease: true
           make_latest: true
